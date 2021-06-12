@@ -1,0 +1,62 @@
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+
+@Component({})
+export default class Login extends Vue {
+  form: { [key: string]: any } = {
+    email: "",
+    password: "",
+    remember: false
+  };
+  isLoading: boolean = false;
+  rules = {
+    email: [
+      { required: true, message: "Compo obrigatorio", trigger: "blur" },
+      { type: 'email', message: 'E-mail inválido', trigger: ['blur', 'change'] }
+    ],
+    password: [{ required: true, message: "Compo obrigatorio", trigger: "blur" }]
+  };
+  //Methods
+  runLogin(ref: any) {
+  
+      setTimeout(() => {
+        localStorage.setItem("@beerVueAdmintoken",Math.random().toString(36).replace(/[^a-z]+/g, ''));
+        this.$message.success("Login realizado com sucesso!");
+        this.isLoading=false;
+        this.$router.push({name:'dashboard'})
+      }, 500);
+ 
+  }
+  viewGithug() {
+    window.open('https://github.com/rogeriocode','_blank')
+  }
+}
+</script>
+<template>
+  <section id="login">
+    <div class="box">
+      <h3>
+        <img src="@/assets/images/safeleadlog.png" alt="">
+      </h3>
+      <div class="box__form">
+        <el-form ref="form" :model="form" label-position="top" :rules="rules" label-width="80px">
+          <el-form-item label="E-mail" prop="email">
+            <el-input v-model="form.email" prefix-icon="el-icon-user"></el-input>
+          </el-form-item>
+          <el-form-item label="Senha" class="box__password" prop="password">
+            <router-link :to="{name:'forgotPassword'}">Esqueceu a senha?</router-link>
+            <el-input show-password v-model="form.password" prefix-icon="el-icon-lock"></el-input>
+          </el-form-item>
+          <el-checkbox class="check" v-model="form.remember" label="Lembre de mim"></el-checkbox>
+          <el-button type="primary" @click="runLogin('form')" :loading="isLoading">
+            <span v-if="!isLoading">Entrar</span>
+            <spa v-else>Entrando...</spa>
+          </el-button>
+        </el-form>
+      </div>
+    </div>
+    <span class="developed">Developed with <i class="ion-ios-heart heart"></i> by <el-link @click="viewGithug()">#Safeleads</el-link></span>
+  </section>
+</template>
+
+<style lang="scss" scoped src="./styles/_index.scss"></style>
